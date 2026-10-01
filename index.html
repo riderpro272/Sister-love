@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sister, Do You Love Me? ❤️</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; overflow: hidden;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: linear-gradient(135deg,#ffd6e7,#e8d7ff,#d8f3ff);
+    display:flex; align-items:center; justify-content:center;
+    color:#35152a;
+  }
+  .card {
+    width:min(92vw,520px); min-height:420px; padding:38px 28px;
+    background:rgba(255,255,255,.88); backdrop-filter:blur(12px);
+    border-radius:28px; box-shadow:0 20px 60px rgba(90,30,70,.2);
+    text-align:center; position:relative;
+  }
+  .heart { font-size:64px; animation:pulse 1.2s infinite; }
+  @keyframes pulse { 50%{transform:scale(1.12)} }
+  h1 { font-size:clamp(28px,7vw,44px); margin:8px 0 12px; }
+  p { font-size:18px; opacity:.8; }
+  .buttons { margin-top:36px; display:flex; justify-content:center; gap:18px; }
+  button {
+    border:0; border-radius:999px; padding:14px 28px; font-size:18px;
+    font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.12);
+  }
+  #yes { background:#ff4f87; color:white; }
+  #no {
+    background:#eee; color:#333; position:fixed;
+    transition:left .18s ease, top .18s ease, transform .18s ease;
+    z-index:10;
+  }
+  .hidden { display:none !important; }
+  #paymentPage { width:min(92vw,520px); text-align:center; }
+  .paycard {
+    background:white; border-radius:28px; padding:30px 24px;
+    box-shadow:0 20px 60px rgba(40,20,60,.2);
+  }
+  .amount { font-size:42px; font-weight:800; margin:8px 0; }
+  #qrcode { margin:22px auto; width:220px; height:220px; }
+  .upi {
+    background:#f5f5f7; padding:12px; border-radius:12px;
+    font-family:monospace; word-break:break-all;
+  }
+  .paybtn {
+    display:inline-block; text-decoration:none; background:#6c3df5;
+    color:#fff; padding:14px 24px; border-radius:999px;
+    font-weight:700; margin-top:14px;
+  }
+  .note { font-size:13px; opacity:.65; margin-top:16px; }
+</style>
+</head>
+<body>
+
+<section class="card" id="questionPage">
+  <div class="heart">❤️</div>
+  <h1>Sister, do you love me?</h1>
+  <p>Be honest... 😌</p>
+  <div class="buttons">
+    <button id="yes">YES ❤️</button>
+    <button id="no">NO 😏</button>
+  </div>
+</section>
+
+<section id="paymentPage" class="hidden">
+  <div class="paycard">
+    <div class="heart">🥰</div>
+    <h1>Yay! I knew it! ❤️</h1>
+    <p>Your official “I love my sibling” fee:</p>
+    <div class="amount">₹500</div>
+    <div id="qrcode"></div>
+    <div class="upi">UPI ID: 8250792041@ybl</div>
+    <a class="paybtn" href="upi://pay?pa=8250792041%40ybl&pn=Sister%20Love&am=500&cu=INR">
+      Pay ₹500 with UPI
+    </a>
+    <div class="note">Scan the QR with any UPI app, or tap the button on a phone that supports UPI links.</div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const no = document.getElementById('no');
+const yes = document.getElementById('yes');
+const question = document.getElementById('questionPage');
+const payment = document.getElementById('paymentPage');
+
+function moveNo() {
+  const pad = 12;
+  const maxX = window.innerWidth - no.offsetWidth - pad;
+  const maxY = window.innerHeight - no.offsetHeight - pad;
+  const x = Math.max(pad, Math.random() * maxX);
+  const y = Math.max(pad, Math.random() * maxY);
+  no.style.left = x + 'px';
+  no.style.top = y + 'px';
+}
+['mouseenter','touchstart','click'].forEach(evt => {
+  no.addEventListener(evt, e => {
+    if (evt === 'click') e.preventDefault();
+    moveNo();
+  });
+});
+
+yes.addEventListener('click', () => {
+  question.classList.add('hidden');
+  no.classList.add('hidden');
+  payment.classList.remove('hidden');
+  new QRCode(document.getElementById("qrcode"), {
+    text: "upi://pay?pa=8250792041@ybl&pn=Sister%20Love&am=500&cu=INR",
+    width: 220, height: 220
+  });
+});
+window.addEventListener('resize', () => {
+  if (!no.classList.contains('hidden')) moveNo();
+});
+</script>
+</body>
+</html>
